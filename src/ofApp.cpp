@@ -6,7 +6,10 @@ void ofApp::setup(){
     ofSoundStreamSetup(0, 1, this, 44100, beat.getBufferSize(), 4);
     
     //ofClear(0,0,0);
-    //ofBackground(0,0,0);
+    
+    ofEnableAntiAliasing();
+    ofEnableSmoothing();
+    
     
     
     shaderBlurX.load("shadersGL3/shaderBlurX");
@@ -27,7 +30,7 @@ void ofApp::setup(){
 void ofApp::update(){
     beat.update(ofGetElapsedTimeMillis());
     
-    auto duration = 1.f;
+    auto duration = 3;
     auto endTime = initTime + duration;
     auto now = ofGetElapsedTimef();
     
@@ -38,7 +41,8 @@ void ofApp::update(){
     endRadius = ofMap(snare, 0, 1, 100, 500);
     
     
-    
+    ofBackground(0,0,0);
+    //ofSetColor(0,0,255);
     
     //cout << snare;
     //cout << "\n";
@@ -48,9 +52,10 @@ void ofApp::update(){
     radius = ofxeasing::map_clamp(now, initTime, endTime, radius, endRadius, &ofxeasing::cubic::easeIn);
     
     if (kick > 0.75) {
-        endRotation = ofMap(random(), 0, 1, -60, 60);
+        endRotation = ofMap(random(), 0, 1, -30, 30);
     }
     rotation = ofxeasing::map_clamp(now, initTime, endTime, rotation, endRotation, &ofxeasing::cubic::easeIn);
+    //rotation = 30;
 }
 
 //--------------------------------------------------------------
@@ -75,14 +80,15 @@ void ofApp::draw(){
     //----------------------------------------------------------
     fboBlurOnePass.begin();
     
-    ofClear(255, 0, 0);
+    //ofClear(255, 0, 0);
     //ofBackground(0, 0, 0);  // Clear the screen with a black color
     //ofSetColor(0, 255, 0);
     
     shaderBlurX.begin();
     
     
-    
+    ofClear(0, 0, 255);
+
     
     //ofDrawRectangle(50, 50, 100, 100*kick);
     //ofDrawRectangle(200, 50, 100, 100*snare);
@@ -108,15 +114,23 @@ void ofApp::draw(){
     
     //ofSetColor(255, 0, 0);  // Set the drawing color to white
     
-    sphere.setRadius(radius);
+    ofClear(255, 255, 255);
+    //ofSetColor(0,0,255);
+    
+    sphere.setRadius(radius * 3);
+    sphere.move(0, 0, 0);
     sphere.drawWireframe();
     
-    sphere2.setRadius(radius * 2);
-    sphere2.move(0.25, 0, 0);
+    //ofClear(0, 255, 0);
+    
+    sphere2.setRadius(radius * 2.5);
+    sphere2.move(0, 0, -0.25);
     sphere2.drawWireframe();
     
-    sphere3.setRadius(radius * 3);
-    sphere3.move(-0.25, 0, 0);
+    //ofClear(0, 0, 255);
+    
+    sphere3.setRadius(radius * 3.5);
+    sphere3.move(0, 0, 0.25);
     sphere3.drawWireframe();
     //sphere.drawFaces();
 
@@ -131,6 +145,8 @@ void ofApp::draw(){
     
     //----------------------------------------------------------
     fboBlurTwoPass.begin();
+    ofClear(0, 0, 255);
+    
     //ofClear(255, 255, 255, 255);
     
     shaderBlurY.begin();
