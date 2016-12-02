@@ -24,13 +24,18 @@ void ofApp::setup(){
     initTime = 0;
     endRadius = 0;
     endRotation = 0;
+    radius = 100;
+    
+    sphere.setResolution(25);
+    sphere2.setResolution(25);
+    sphere3.setResolution(25);
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
     beat.update(ofGetElapsedTimeMillis());
     
-    auto duration = 3;
+    auto duration = 3.f;
     auto endTime = initTime + duration;
     auto now = ofGetElapsedTimef();
     
@@ -38,24 +43,40 @@ void ofApp::update(){
     float snare = beat.snare();
     float hihat = beat.hihat();
     
-    endRadius = ofMap(snare, 0, 1, 100, 500);
+    endRadius = ofMap(snare, 0, 1, 100, 1000);
     
     
     ofBackground(0,0,0);
-    //ofSetColor(0,0,255);
+    ofSetColor(0,0,255,126);
     
-    //cout << snare;
-    //cout << "\n";
-    if (snare > 0.75) {
+    cout << snare;
+    cout << "\n";
+    if (snare > 0.75 && now - initTime > 0.5) {
         initTime = ofGetElapsedTimef();
+        cout << "reset";
     }
-    radius = ofxeasing::map_clamp(now, initTime, endTime, radius, endRadius, &ofxeasing::cubic::easeIn);
+    radius = ofxeasing::map_clamp(now, initTime, endTime, radius, endRadius, &ofxeasing::linear::easeIn);
+    cout << endRadius;
+    cout << " ";
+    cout << radius;
+    cout << " ";
+    cout << now;
+    cout << " ";
+    cout << initTime;
+    cout << " ";
+    cout << endTime;
+    cout << "\n";
     
-    if (kick > 0.75) {
-        endRotation = ofMap(random(), 0, 1, -30, 30);
+    //radius = endRadius;
+    
+    if (kick > 0.75 && now - initTime > 0.5) {
+        endRotation = ofMap(kick, 0, 1, -180, 180);
     }
     rotation = ofxeasing::map_clamp(now, initTime, endTime, rotation, endRotation, &ofxeasing::cubic::easeIn);
     //rotation = 30;
+    
+    
+    resolution = ofMap(hihat, 0, 1, 5, 50);
 }
 
 //--------------------------------------------------------------
@@ -78,16 +99,18 @@ void ofApp::draw(){
     cout << '\n';*/
     
     //----------------------------------------------------------
-    fboBlurOnePass.begin();
+    /*fboBlurOnePass.begin();
     
     //ofClear(255, 0, 0);
     //ofBackground(0, 0, 0);  // Clear the screen with a black color
     //ofSetColor(0, 255, 0);
     
-    shaderBlurX.begin();
+    shaderBlurX.begin();*/
     
     
-    ofClear(0, 0, 255);
+    
+    
+    //ofClear(0, 0, 255);
 
     
     //ofDrawRectangle(50, 50, 100, 100*kick);
@@ -110,22 +133,33 @@ void ofApp::draw(){
     
     
     blur = 30 * snare;
-    shaderBlurX.setUniform1f("blurAmnt", blur);
+    //shaderBlurX.setUniform1f("blurAmnt", blur);
+    
+    ofBackground(0,0,0);
+    ofSetColor(0,0,255,126);
+
     
     //ofSetColor(255, 0, 0);  // Set the drawing color to white
     
-    ofClear(255, 255, 255);
+    //ofClear(255, 255, 255);
     //ofSetColor(0,0,255);
+    
+    
+    sphere.setResolution(resolution);
+    sphere2.setResolution(resolution);
+    sphere3.setResolution(resolution);
     
     sphere.setRadius(radius * 3);
     sphere.move(0, 0, 0);
     sphere.drawWireframe();
+    //sphere.drawVertices();
     
     //ofClear(0, 255, 0);
     
     sphere2.setRadius(radius * 2.5);
     sphere2.move(0, 0, -0.25);
     sphere2.drawWireframe();
+    //sphere2.drawVertices();
     
     //ofClear(0, 0, 255);
     
@@ -133,9 +167,10 @@ void ofApp::draw(){
     sphere3.move(0, 0, 0.25);
     sphere3.drawWireframe();
     //sphere.drawFaces();
+    //sphere3.drawVertices();
 
     
-    shaderBlurX.end();
+    /*shaderBlurX.end();
     
     fboBlurOnePass.end();
     
@@ -145,7 +180,9 @@ void ofApp::draw(){
     
     //----------------------------------------------------------
     fboBlurTwoPass.begin();
-    ofClear(0, 0, 255);
+    
+    
+    //ofClear(0, 0, 255);
     
     //ofClear(255, 255, 255, 255);
     
@@ -154,6 +191,11 @@ void ofApp::draw(){
     shaderBlurY.setUniform1f("kick", ofMap(kick, 0, 1, 0, 100));
     shaderBlurY.setUniform1f("snare", ofMap(snare, 0, 1, 0, 100));
     shaderBlurY.setUniform1f("hihat", ofMap(hihat, 0, 1, 0, 100));
+    
+    
+    ofBackground(0,0,0);
+    ofSetColor(0,0,255,126);
+
     
     fboBlurOnePass.draw(0, 0);
     
@@ -165,7 +207,7 @@ void ofApp::draw(){
     //ofBackground(255);  // Clear the screen with a black color
     //ofSetColor(ofColor::black);
     
-    fboBlurTwoPass.draw(0, 0);
+    fboBlurTwoPass.draw(0, 0);*/
     
 }
 

@@ -42,5 +42,7 @@ class ofApp : public ofBaseApp{
     
         float endRotation;
         float rotation;
+    
+        float resolution;
 		
 };
