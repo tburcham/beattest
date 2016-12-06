@@ -70,7 +70,7 @@ void ofApp::update(){
     //radius = endRadius;
     
     if (kick > 0.75 && now - initTime > 0.5) {
-        endRotation = ofMap(kick, 0, 1, -180, 180);
+        endRotation = ofMap(random(), 0, 1, -180, 180);
     }
     rotation = ofxeasing::map_clamp(now, initTime, endTime, rotation, endRotation, &ofxeasing::cubic::easeIn);
     //rotation = 30;
@@ -136,7 +136,7 @@ void ofApp::draw(){
     //shaderBlurX.setUniform1f("blurAmnt", blur);
     
     ofBackground(0,0,0);
-    ofSetColor(0,0,255,126);
+    ofSetColor(ofColor::indianRed ,126);
 
     
     //ofSetColor(255, 0, 0);  // Set the drawing color to white
@@ -150,7 +150,7 @@ void ofApp::draw(){
     sphere3.setResolution(resolution);
     
     sphere.setRadius(radius * 3);
-    sphere.move(0, 0, 0);
+    sphere.move(0, 0.125, 0);
     sphere.drawWireframe();
     //sphere.drawVertices();
     
