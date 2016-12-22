@@ -29,6 +29,8 @@ void ofApp::setup(){
     sphere.setResolution(25);
     sphere2.setResolution(25);
     sphere3.setResolution(25);
+    sphere4.setResolution(25);
+    sphere5.setResolution(25);
 }
 
 //--------------------------------------------------------------
@@ -47,7 +49,7 @@ void ofApp::update(){
     
     
     ofBackground(0,0,0);
-    ofSetColor(0,0,255,126);
+    ofSetColor(0,0,255,50);
     
     cout << snare;
     cout << "\n";
@@ -69,14 +71,14 @@ void ofApp::update(){
     
     //radius = endRadius;
     
-    if (kick > 0.75 && now - initTime > 0.5) {
+    if (snare > 0.75 && now - initTime > 0.5) {
         endRotation = ofMap(random(), 0, 1, -180, 180);
     }
     rotation = ofxeasing::map_clamp(now, initTime, endTime, rotation, endRotation, &ofxeasing::cubic::easeIn);
     //rotation = 30;
     
     
-    resolution = ofMap(hihat, 0, 1, 5, 50);
+    resolution = ofMap(hihat, 0, 1, 50, 150);
 }
 
 //--------------------------------------------------------------
@@ -118,57 +120,100 @@ void ofApp::draw(){
     //ofDrawRectangle(350, 50, 100, 100*hihat);
     
     
+    //ofPushMatrix();
+    
     // translate plane into center screen.
     float tx = ofGetWidth() / 2;
     float ty = ofGetHeight() / 2;
     ofTranslate(tx, ty);
+    
+    
 
     
     /*float percentY = mouseY / (float)ofGetHeight();
     float rotation = ofMap(percentY, 0, 1, -60, 60, true) + 60;
     float percentX = mouseX / (float)ofGetWidth();
     float rotationX = ofMap(percentX, 0, 1, -60, 60, true) + 60;*/
-    ofRotate(rotation, 1, 0.5, 0);
+    //ofRotate(30, 2, 1, 0.5);
+    ofRotate(1, 2, 1, 0.5);
     //plane.drawWireframe();
     
     
-    blur = 30 * snare;
+    shaderBlurX.begin();
+    
+    //blur = 30 * snare;
     //shaderBlurX.setUniform1f("blurAmnt", blur);
     
-    ofBackground(0,0,0);
-    ofSetColor(ofColor::indianRed ,126);
+    
+    /*ofFloatColor sphereColor = ofColor::indigo;
+    float sphereColorF[4] = {sphereColor.r, sphereColor.g, sphereColor.b, sphereColor.a};
+    shaderBlurX.setUniform4fv("sphereColor", sphereColorF);*/
+    
+    ofSetColor(ofColor::green);
+    
+    /*ofBackground(0,0,0);
+    ofSetColor(ofColor::indianRed ,126);*/
 
     
     //ofSetColor(255, 0, 0);  // Set the drawing color to white
     
-    //ofClear(255, 255, 255);
+    //ofClear(0,0,0);
+    //ofBackground(0,0,0);
+    
     //ofSetColor(0,0,255);
     
     
     sphere.setResolution(resolution);
     sphere2.setResolution(resolution);
     sphere3.setResolution(resolution);
+    sphere4.setResolution(resolution);
+    sphere5.setResolution(resolution);
     
-    sphere.setRadius(radius * 3);
-    sphere.move(0, 0.125, 0);
+    sphere.setRadius(radius * 4);
+    sphere.move(0, 0.25, 0);
     sphere.drawWireframe();
-    //sphere.drawVertices();
+    ///sphere.drawFaces();
     
     //ofClear(0, 255, 0);
+    ofSetColor(ofColor::red);
     
     sphere2.setRadius(radius * 2.5);
-    sphere2.move(0, 0, -0.25);
+    sphere2.move(0, 0.25, -0.125);
     sphere2.drawWireframe();
     //sphere2.drawVertices();
     
     //ofClear(0, 0, 255);
     
+    ofSetColor(ofColor::yellow);
+    
     sphere3.setRadius(radius * 3.5);
-    sphere3.move(0, 0, 0.25);
+    sphere3.move(0, -0.25, -0.25);
+    //ofSetColor(255,255,255);
     sphere3.drawWireframe();
-    //sphere.drawFaces();
+    //ofSetColor(0,0,255,126);
+    //sphere3.drawFaces();
     //sphere3.drawVertices();
+    
+    
+    ofSetColor(ofColor::blue);
+    
+    sphere4.setRadius(radius * 3);
+    sphere4.move(0.125, 0, 0);
+    sphere4.drawWireframe();
+    //sphere2.drawFaces();
+    
+    ofSetColor(ofColor::indigo);
+    
+    sphere5.setRadius(radius * 2.5);
+    sphere5.move(-0.125, 0, 0);
+    sphere5.drawWireframe();
+    //sphere2.drawFaces();
+    
 
+    //ofPopMatrix();
+    shaderBlurX.end();
+    
+    //sphere3.drawWireframe();
     
     /*shaderBlurX.end();
     

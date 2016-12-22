@@ -4,20 +4,29 @@
 
   },
   "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "86145F1292B789AB93966AE12565F1D778504ABC" : 9223372036854775807,
+    "210A84CB64DBE001319448A793DFC671846EB46E" : 9223372036854775807,
     "2D37CC4A2C707055D9A345C8DB682D8540B72D47" : 9223372036854775807,
-    "E1973EE936B32FD6C1A9080FB86363F99151DFAC" : 9223372036854775807,
-    "86145F1292B789AB93966AE12565F1D778504ABC" : 9223372036854775807
+    "95F70890EFD46183734FEDFE52CF53391DE6937E" : 9223372036854775807,
+    "E1973EE936B32FD6C1A9080FB86363F99151DFAC" : 9223372036854775807
   },
   "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "D1A442B6-E2C2-45EE-8772-C5BE81622BF3",
   "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "86145F1292B789AB93966AE12565F1D778504ABC" : "..\/..\/addons\/ofxEasing",
+    "210A84CB64DBE001319448A793DFC671846EB46E" : "..\/..\/addons\/ofxPostGlitch",
     "2D37CC4A2C707055D9A345C8DB682D8540B72D47" : "beattest\/",
-    "E1973EE936B32FD6C1A9080FB86363F99151DFAC" : "..\/..\/addons\/ofxBeat",
-    "86145F1292B789AB93966AE12565F1D778504ABC" : "..\/..\/addons\/ofxEasing"
+    "95F70890EFD46183734FEDFE52CF53391DE6937E" : "..\/..\/addons\/ofxPostProcessing",
+    "E1973EE936B32FD6C1A9080FB86363F99151DFAC" : "..\/..\/addons\/ofxBeat"
   },
   "DVTSourceControlWorkspaceBlueprintNameKey" : "beattest",
   "DVTSourceControlWorkspaceBlueprintVersion" : 204,
   "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "beattest.xcodeproj",
   "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/maxillacult\/ofxPostGlitch.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "210A84CB64DBE001319448A793DFC671846EB46E"
+    },
     {
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/tburcham\/beattest.git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
@@ -27,6 +36,11 @@
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/arturoc\/ofxEasing.git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "86145F1292B789AB93966AE12565F1D778504ABC"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/neilmendoza\/ofxPostProcessing.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "95F70890EFD46183734FEDFE52CF53391DE6937E"
     },
     {
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/darrenmothersele\/ofxBeat.git",
