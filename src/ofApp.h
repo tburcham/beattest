@@ -35,6 +35,8 @@ class ofApp : public ofBaseApp{
         ofSpherePrimitive sphere4;
         ofSpherePrimitive sphere5;
     
+        ofCamera cam;
+    
         ofxBeat beat;
         void audioReceived(float*, int, int);
     

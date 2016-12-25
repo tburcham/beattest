@@ -31,6 +31,19 @@ void ofApp::setup(){
     sphere3.setResolution(25);
     sphere4.setResolution(25);
     sphere5.setResolution(25);
+    
+    sphere.move(ofRandom(-200, 200), ofRandom(-200, 200), ofRandom(-200, 200));
+    sphere2.move(ofRandom(-200, 200), ofRandom(-200, 200), ofRandom(-200, 200));
+    sphere3.move(ofRandom(-200, 200), ofRandom(-200, 200), ofRandom(-200, 200));
+    sphere4.move(ofRandom(-200, 200), ofRandom(-200, 200), ofRandom(-200, 200));
+    sphere5.move(ofRandom(-200, 200), ofRandom(-200, 200), ofRandom(-200, 200));
+                         
+    
+    glMatrixMode(GL_PROJECTION);
+    cam.setFov(60);
+    cam.setNearClip(1);
+    cam.setFarClip(2000);
+    cam.begin();
 }
 
 //--------------------------------------------------------------
@@ -78,7 +91,7 @@ void ofApp::update(){
     //rotation = 30;
     
     
-    resolution = ofMap(hihat, 0, 1, 50, 150);
+    resolution = ofMap(hihat, 0, 1, 10, 100);
 }
 
 //--------------------------------------------------------------
@@ -92,6 +105,8 @@ void ofApp::draw(){
     float kick = beat.kick();
     float snare = beat.snare();
     float hihat = beat.hihat();
+    
+    float rot = 0.5 * ofGetFrameNum(); // ofRotate takes degrees
     
     /*cout << kick;
     cout << '\n';
@@ -122,6 +137,10 @@ void ofApp::draw(){
     
     //ofPushMatrix();
     
+    
+    
+    ofRotate(rot, 2, 1, 1);
+    
     // translate plane into center screen.
     float tx = ofGetWidth() / 2;
     float ty = ofGetHeight() / 2;
@@ -135,11 +154,13 @@ void ofApp::draw(){
     float percentX = mouseX / (float)ofGetWidth();
     float rotationX = ofMap(percentX, 0, 1, -60, 60, true) + 60;*/
     //ofRotate(30, 2, 1, 0.5);
-    ofRotate(1, 2, 1, 0.5);
+    
     //plane.drawWireframe();
     
     
     shaderBlurX.begin();
+    
+    //ofRotate(rotation, 2, 1, 0.5);
     
     //blur = 30 * snare;
     //shaderBlurX.setUniform1f("blurAmnt", blur);
@@ -170,7 +191,7 @@ void ofApp::draw(){
     sphere5.setResolution(resolution);
     
     sphere.setRadius(radius * 4);
-    sphere.move(0, 0.25, 0);
+    
     sphere.drawWireframe();
     ///sphere.drawFaces();
     
@@ -178,7 +199,7 @@ void ofApp::draw(){
     ofSetColor(ofColor::red);
     
     sphere2.setRadius(radius * 2.5);
-    sphere2.move(0, 0.25, -0.125);
+   
     sphere2.drawWireframe();
     //sphere2.drawVertices();
     
@@ -187,7 +208,7 @@ void ofApp::draw(){
     ofSetColor(ofColor::yellow);
     
     sphere3.setRadius(radius * 3.5);
-    sphere3.move(0, -0.25, -0.25);
+    
     //ofSetColor(255,255,255);
     sphere3.drawWireframe();
     //ofSetColor(0,0,255,126);
@@ -198,20 +219,24 @@ void ofApp::draw(){
     ofSetColor(ofColor::blue);
     
     sphere4.setRadius(radius * 3);
-    sphere4.move(0.125, 0, 0);
+    
     sphere4.drawWireframe();
     //sphere2.drawFaces();
     
     ofSetColor(ofColor::indigo);
     
     sphere5.setRadius(radius * 2.5);
-    sphere5.move(-0.125, 0, 0);
+    
     sphere5.drawWireframe();
     //sphere2.drawFaces();
     
 
     //ofPopMatrix();
     shaderBlurX.end();
+    
+    
+    
+    cam.end();
     
     //sphere3.drawWireframe();
     
