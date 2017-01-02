@@ -18,7 +18,7 @@ void ofApp::setup(){
     fboBlurOnePass.allocate(ofGetWidth(), ofGetHeight());
     fboBlurTwoPass.allocate(ofGetWidth(), ofGetHeight());
     
-    plane.set(800, 600, 80, 60);
+    //plane.set(1600, 1200, 80, 60);
     //plane.mapTexCoordsFromTexture(img.getTextureReference());
     
     initTime = 0;
@@ -26,31 +26,67 @@ void ofApp::setup(){
     endRotation = 0;
     radius = 100;
     
-    sphere.setResolution(25);
+    /*sphere.setResolution(25);
     sphere2.setResolution(25);
     sphere3.setResolution(25);
     sphere4.setResolution(25);
-    sphere5.setResolution(25);
+    sphere5.setResolution(25);*/
     
-    sphere.move(ofRandom(-200, 200), ofRandom(-200, 200), ofRandom(-200, 200));
+    /*sphere.move(ofRandom(-200, 200), ofRandom(-200, 200), ofRandom(-200, 200));
     sphere2.move(ofRandom(-200, 200), ofRandom(-200, 200), ofRandom(-200, 200));
     sphere3.move(ofRandom(-200, 200), ofRandom(-200, 200), ofRandom(-200, 200));
     sphere4.move(ofRandom(-200, 200), ofRandom(-200, 200), ofRandom(-200, 200));
-    sphere5.move(ofRandom(-200, 200), ofRandom(-200, 200), ofRandom(-200, 200));
+    sphere5.move(ofRandom(-200, 200), ofRandom(-200, 200), ofRandom(-200, 200));*/
+    
+    
+    for( int i=0; i < 25; i++ ) {
+        spheres[i].setResolution(25);
+        spheres[i].move(ofRandom(-500, 500), ofRandom(-500, 500), ofRandom(-500, 500));
+    }
                          
     
     glMatrixMode(GL_PROJECTION);
     cam.setFov(60);
     cam.setNearClip(1);
-    cam.setFarClip(2000);
-    cam.begin();
+    cam.setFarClip(20000);
+    //cam.move(0, 0, 50000);
+    
+    //cam.lookAt(sphere);
+    
+    //setupCamera();
+    
+    //cam.begin();
+    
+    
+    colors[0] = ofColor::red;
+    colors[1] = ofColor::darkRed;
+    colors[2] = ofColor::mediumVioletRed;
+    colors[3] = ofColor::indianRed;
+    colors[4] = ofColor::orangeRed;
+    
+    point.setDiffuseColor(ofColor(0.0, 255.0, 0.0));
+    point.setPointLight();
+    
+    spot.setDiffuseColor(ofFloatColor(255.0, 0.0, 0.0f));
+    spot.setSpecularColor(ofColor(0, 0, 255));
+    spot.setSpotlight();
+    spot.setSpotConcentration(5);
+    spot.setSpotlightCutOff(10);
+    spot_rot = ofVec3f(0, 0, 0);
+    setLightOri(spot, spot_rot);
+    
+    spot.setPosition(0, 0, 300);
+    
+    bOrbit = bRoll = false;
+    angleH = roll = 0.0f;
+    distance = 500.f;
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
     beat.update(ofGetElapsedTimeMillis());
     
-    auto duration = 3.f;
+    auto duration = 5.f;
     auto endTime = initTime + duration;
     auto now = ofGetElapsedTimef();
     
@@ -58,7 +94,7 @@ void ofApp::update(){
     float snare = beat.snare();
     float hihat = beat.hihat();
     
-    endRadius = ofMap(snare, 0, 1, 100, 1000);
+    endRadius = ofMap(snare, 0, 1, 50, 2000);
     
     
     ofBackground(0,0,0);
@@ -66,11 +102,11 @@ void ofApp::update(){
     
     cout << snare;
     cout << "\n";
-    if (snare > 0.75 && now - initTime > 0.5) {
+    if (kick > 0.75 && now - initTime > 0.5) {
         initTime = ofGetElapsedTimef();
         cout << "reset";
     }
-    radius = ofxeasing::map_clamp(now, initTime, endTime, radius, endRadius, &ofxeasing::linear::easeIn);
+    radius = ofxeasing::map_clamp(now, initTime, endTime, radius, endRadius, &ofxeasing::quad::easeOut);
     cout << endRadius;
     cout << " ";
     cout << radius;
@@ -85,13 +121,23 @@ void ofApp::update(){
     //radius = endRadius;
     
     if (snare > 0.75 && now - initTime > 0.5) {
-        endRotation = ofMap(random(), 0, 1, -180, 180);
+        endRotation = ofMap(random(), 0, 1, -1, 1);
     }
-    rotation = ofxeasing::map_clamp(now, initTime, endTime, rotation, endRotation, &ofxeasing::cubic::easeIn);
+    rotation = ofxeasing::map_clamp(now, initTime, endTime, kick, endRotation, &ofxeasing::cubic::easeIn);
     //rotation = 30;
     
     
-    resolution = ofMap(hihat, 0, 1, 10, 100);
+    resolution = ofMap(hihat, 0, 1, 10, 50);
+    
+    //setupCamera();
+    
+    if (bOrbit) angleH += 1.f;
+    if (bRoll) roll += (snare * 2);
+    
+    // here's where the transformation happens, using the orbit and roll member functions of the ofNode class,
+    // since angleH and distance are initialised to 0 and 500, we start up as how we want it
+    cam.orbit(angleH, 0, distance);
+    cam.roll(roll);
 }
 
 //--------------------------------------------------------------
@@ -106,36 +152,8 @@ void ofApp::draw(){
     float snare = beat.snare();
     float hihat = beat.hihat();
     
-    float rot = 0.5 * ofGetFrameNum(); // ofRotate takes degrees
-    
-    /*cout << kick;
-    cout << '\n';
-    cout << snare;
-    cout << '\n';
-    cout << hihat;
-    cout << '\n';*/
-    
-    //----------------------------------------------------------
-    /*fboBlurOnePass.begin();
-    
-    //ofClear(255, 0, 0);
-    //ofBackground(0, 0, 0);  // Clear the screen with a black color
-    //ofSetColor(0, 255, 0);
-    
-    shaderBlurX.begin();*/
-    
-    
-    
-    
-    //ofClear(0, 0, 255);
-
-    
-    //ofDrawRectangle(50, 50, 100, 100*kick);
-    //ofDrawRectangle(200, 50, 100, 100*snare);
-    //ofDrawRectangle(350, 50, 100, 100*hihat);
-    
-    
-    //ofPushMatrix();
+    //float rot = map(snare, 0, 1, -0.5, 0.5) * ofGetFrameNum(); // ofRotate takes degrees
+    float rot = 0.5 * ofGetFrameNum();
     
     
     
@@ -158,7 +176,18 @@ void ofApp::draw(){
     //plane.drawWireframe();
     
     
+    
     shaderBlurX.begin();
+    
+    cam.begin();
+    
+    glEnable(GL_LIGHTING);
+    glEnable(GL_LIGHT0);
+    glEnable(GL_NORMALIZE);
+    
+    spot.enable();
+
+
     
     //ofRotate(rotation, 2, 1, 0.5);
     
@@ -170,7 +199,7 @@ void ofApp::draw(){
     float sphereColorF[4] = {sphereColor.r, sphereColor.g, sphereColor.b, sphereColor.a};
     shaderBlurX.setUniform4fv("sphereColor", sphereColorF);*/
     
-    ofSetColor(ofColor::green);
+    
     
     /*ofBackground(0,0,0);
     ofSetColor(ofColor::indianRed ,126);*/
@@ -183,111 +212,151 @@ void ofApp::draw(){
     
     //ofSetColor(0,0,255);
     
+    for( int i=0; i < 25; i++ ) {
+        
+        ofSetColor(colors[i % 5]);
+        
+        spheres[i].setResolution(resolution);
+        spheres[i].setRadius(radius * (i + 1) * 0.25);
+        
+        spheres[i].drawWireframe();
+        //spheres[i].drawFaces();
+        
+    }
     
-    sphere.setResolution(resolution);
-    sphere2.setResolution(resolution);
-    sphere3.setResolution(resolution);
-    sphere4.setResolution(resolution);
-    sphere5.setResolution(resolution);
     
-    sphere.setRadius(radius * 4);
+    
+    
+    /*sphere.setRadius(radius * 4);
+    
+    ofSetColor(colors[0]);
     
     sphere.drawWireframe();
-    ///sphere.drawFaces();
+    sphere.drawFaces();
     
     //ofClear(0, 255, 0);
-    ofSetColor(ofColor::red);
+    ofSetColor(colors[1]);
     
     sphere2.setRadius(radius * 2.5);
    
     sphere2.drawWireframe();
-    //sphere2.drawVertices();
+    sphere2.drawFaces();
     
     //ofClear(0, 0, 255);
     
-    ofSetColor(ofColor::yellow);
+    ofSetColor(colors[2]);
     
     sphere3.setRadius(radius * 3.5);
     
     //ofSetColor(255,255,255);
     sphere3.drawWireframe();
     //ofSetColor(0,0,255,126);
-    //sphere3.drawFaces();
+    sphere3.drawFaces();
     //sphere3.drawVertices();
     
     
-    ofSetColor(ofColor::blue);
+    ofSetColor(colors[3]);
     
     sphere4.setRadius(radius * 3);
     
     sphere4.drawWireframe();
     //sphere2.drawFaces();
     
-    ofSetColor(ofColor::indigo);
+    ofSetColor(colors[4]);
     
     sphere5.setRadius(radius * 2.5);
     
-    sphere5.drawWireframe();
+    sphere5.drawWireframe();*/
+    //sphere5.drawAxes(500);
+    //sphere5.drawNormals(250);
     //sphere2.drawFaces();
-    
+    spot.disable();
 
     //ofPopMatrix();
+    
+    cam.end();
+
+    
     shaderBlurX.end();
     
     
     
-    cam.end();
-    
-    //sphere3.drawWireframe();
-    
-    /*shaderBlurX.end();
-    
-    fboBlurOnePass.end();
-    
-    //fboBlurOnePass.draw(0, 0);
     
     
     
-    //----------------------------------------------------------
-    fboBlurTwoPass.begin();
-    
-    
-    //ofClear(0, 0, 255);
-    
-    //ofClear(255, 255, 255, 255);
-    
-    shaderBlurY.begin();
-    shaderBlurY.setUniform1f("blurAmnt", blur);
-    shaderBlurY.setUniform1f("kick", ofMap(kick, 0, 1, 0, 100));
-    shaderBlurY.setUniform1f("snare", ofMap(snare, 0, 1, 0, 100));
-    shaderBlurY.setUniform1f("hihat", ofMap(hihat, 0, 1, 0, 100));
-    
-    
-    ofBackground(0,0,0);
-    ofSetColor(0,0,255,126);
+}
 
-    
-    fboBlurOnePass.draw(0, 0);
-    
-    shaderBlurY.end();
-    
-    fboBlurTwoPass.end();
-    
-    //----------------------------------------------------------
-    //ofBackground(255);  // Clear the screen with a black color
-    //ofSetColor(ofColor::black);
-    
-    fboBlurTwoPass.draw(0, 0);*/
-    
+void ofApp::setLightOri(ofLight &light, ofVec3f rot)
+{
+    ofVec3f xax(1, 0, 0);
+    ofVec3f yax(0, 1, 0);
+    ofVec3f zax(0, 0, 1);
+    ofQuaternion q;
+    q.makeRotate(rot.x, xax, rot.y, yax, rot.z, zax);
+    light.setOrientation(q);
 }
 
 void ofApp::audioReceived(float* input, int bufferSize, int nChannels) {
     beat.audioReceived(input, bufferSize, nChannels);
 }
 
+void ofApp::setupCamera() {
+    // ofCamera myCam;
+    float tweenvalue = (ofGetElapsedTimeMillis() % 2000) /2000.f; // this will slowly change from 0.0f to 1.0f, resetting every 2 seconds
+    
+    ofQuaternion startQuat;
+    ofQuaternion targetQuat;
+    ofVec3f startPos;
+    ofVec3f targetPos;
+    
+    // we define the camer's start and end orientation here:
+    startQuat.makeRotate(0, 0, 1, 0);			// zero rotation.
+    targetQuat.makeRotate(90, 0, 1, 0);			// rotation 90 degrees around y-axis.
+    
+    // we define the camer's start and end-position here:
+    startPos.set(5000,0,0);
+    targetPos.set(10000,0,0);
+    
+    
+    ofQuaternion tweenedCameraQuaternion;	// this will be the camera's new rotation.
+    
+    // calculate the interpolated orientation
+    tweenedCameraQuaternion.slerp(tweenvalue, startQuat, targetQuat);
+    
+    ofVec3f lerpPos;					//this will hold our tweened position.
+    
+    // calculate the interpolated values.
+    lerpPos.x = ofLerp(tweenvalue, startPos.x, targetPos.x);
+    lerpPos.y = ofLerp(tweenvalue, startPos.y, targetPos.y);
+    lerpPos.z = ofLerp(tweenvalue, startPos.z, targetPos.z);
+    
+    // alternative way to calculate interpolated values:
+    // lerpPos = startPos + ((targetPos-startPos) * tweenvalue);
+    
+    // now update the camera with the calculated orientation and position.
+    cam.setOrientation(tweenedCameraQuaternion);
+    cam.setGlobalPosition(lerpPos);
+}
+
+//--------------------------------------------------------------
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
-
+    if (key == 'h') {
+        bOrbit = !bOrbit;
+    }
+    else if (key == 'r') {
+        bRoll = !bRoll;
+    }
+    else if (key == OF_KEY_UP) {
+        distance = MIN( (distance += 2.5f), 1000);
+        cout << distance << endl;
+        
+    }
+    else if (key == OF_KEY_DOWN) {
+        distance = MAX( (distance -= 2.5f), 150);
+        cout << distance << endl;
+        
+    }
 }
 
 //--------------------------------------------------------------

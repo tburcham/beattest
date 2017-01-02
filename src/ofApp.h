@@ -29,13 +29,15 @@ class ofApp : public ofBaseApp{
         ofFbo fboBlurTwoPass;
     
         ofPlanePrimitive plane;
-        ofSpherePrimitive sphere;
+        /*ofSpherePrimitive sphere;
         ofSpherePrimitive sphere2;
         ofSpherePrimitive sphere3;
         ofSpherePrimitive sphere4;
-        ofSpherePrimitive sphere5;
+        ofSpherePrimitive sphere5;*/
     
-        ofCamera cam;
+        ofSpherePrimitive spheres[25];
+    
+        ofEasyCam cam;
     
         ofxBeat beat;
         void audioReceived(float*, int, int);
@@ -48,5 +50,27 @@ class ofApp : public ofBaseApp{
         float rotation;
     
         float resolution;
+    
+        ofColor colors[5];
+    
+        ofLight spot;
+        ofLight point;
+        ofLight dir;
+        ofLight amb;
+        ofMaterial material;
+    
+        ofVec3f spot_rot;
 		
+        void setLightOri(ofLight &light, ofVec3f rot);
+    
+        void setupCamera();
+    
+        //ofCamera cam;
+        ofBoxPrimitive box;
+        float angle;
+        ofLight light;
+        bool bOrbit, bRoll;
+        float angleH, roll, distance;
+    
+
 };
