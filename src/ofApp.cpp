@@ -94,7 +94,7 @@ void ofApp::update(){
     float snare = beat.snare();
     float hihat = beat.hihat();
     
-    endRadius = ofMap(snare, 0, 1, 50, 2000);
+    endRadius = ofMap(snare, 0, 1, 100, 250);
     
     
     ofBackground(0,0,0);
@@ -220,7 +220,7 @@ void ofApp::draw(){
         spheres[i].setRadius(radius * (i + 1) * 0.25);
         
         spheres[i].drawWireframe();
-        //spheres[i].drawFaces();
+        spheres[i].drawFaces();
         
     }
     

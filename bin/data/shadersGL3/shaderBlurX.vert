@@ -10,6 +10,7 @@ in vec4 normal;
 in vec4 color;
 
 out vec2 texCoordVarying;
+out vec4 positionV;
 
 void main()
 {
@@ -20,4 +21,5 @@ void main()
 
     texCoordVarying = texcoord;
 	gl_Position = modelViewProjectionMatrix * position;
+    positionV = position;
 }
