@@ -1,2 +1,2 @@
-ofxEasing
 ofxBeat
+ofxEasing

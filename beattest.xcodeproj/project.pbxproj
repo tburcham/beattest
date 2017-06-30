@@ -47,6 +47,7 @@
 /* Begin PBXFileReference section */
 		4FA7C66BC39A49BCFA509386 /* fft.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = fft.h; path = ../../../addons/ofxBeat/src/fft.h; sourceTree = SOURCE_ROOT; };
 		528CB0EB22F0A199A5F479D5 /* easing_terms_of_use.html */ = {isa = PBXFileReference; explicitFileType = file; fileEncoding = 30; name = easing_terms_of_use.html; path = ../../../addons/ofxEasing/src/easing_terms_of_use.html; sourceTree = SOURCE_ROOT; };
+		A59B58E41ED938FD0080B777 /* data */ = {isa = PBXFileReference; lastKnownFileType = folder; name = data; path = bin/data; sourceTree = "<group>"; };
 		B85440CFD1540D81C05B85CB /* fft.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = fft.cpp; path = ../../../addons/ofxBeat/src/fft.cpp; sourceTree = SOURCE_ROOT; };
 		C6684F2AB3BF96EE746EF6DA /* ofxBeat.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = ofxBeat.cpp; path = ../../../addons/ofxBeat/src/ofxBeat.cpp; sourceTree = SOURCE_ROOT; };
 		E4328143138ABC890047C5CB /* openFrameworksLib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = openFrameworksLib.xcodeproj; path = ../../../libs/openFrameworksCompiled/project/osx/openFrameworksLib.xcodeproj; sourceTree = SOURCE_ROOT; };
@@ -58,7 +59,6 @@
 		E4EB691F138AFCF100A09F29 /* CoreOF.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = CoreOF.xcconfig; path = ../../../libs/openFrameworksCompiled/project/osx/CoreOF.xcconfig; sourceTree = SOURCE_ROOT; };
 		E4EB6923138AFD0F00A09F29 /* Project.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Project.xcconfig; sourceTree = "<group>"; };
 		F21017D5316CB2B55CD68641 /* ofxBeat.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxBeat.h; path = ../../../addons/ofxBeat/src/ofxBeat.h; sourceTree = SOURCE_ROOT; };
-		F88A27741DE17D4900F7AD58 /* shadersGL3 */ = {isa = PBXFileReference; lastKnownFileType = folder; name = shadersGL3; path = bin/data/shadersGL3; sourceTree = "<group>"; };
 		FF2B018E24837032A4878576 /* ofxEasing.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxEasing.h; path = ../../../addons/ofxEasing/src/ofxEasing.h; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
@@ -111,8 +111,8 @@
 		BB4B014C10F69532006C3DED /* addons */ = {
 			isa = PBXGroup;
 			children = (
-				0D0595A62FF5ED8D37029107 /* ofxEasing */,
 				5B3BFE89BB3B98E8FC2F783F /* ofxBeat */,
+				0D0595A62FF5ED8D37029107 /* ofxEasing */,
 			);
 			name = addons;
 			sourceTree = "<group>";
@@ -135,7 +135,7 @@
 				BB4B014C10F69532006C3DED /* addons */,
 				6948EE371B920CB800B5AC1A /* local_addons */,
 				E4B69B5B0A3A1756003C02F2 /* beattestDebug.app */,
-				F88A27741DE17D4900F7AD58 /* shadersGL3 */,
+				A59B58E41ED938FD0080B777 /* data */,
 			);
 			sourceTree = "<group>";
 		};
@@ -256,9 +256,9 @@
 			files = (
 				E4B69E200A3A1BDC003C02F2 /* main.cpp in Sources */,
 				E4B69E210A3A1BDC003C02F2 /* ofApp.cpp in Sources */,
-				08C23182D394C53F6ECE6CCC /* easing_terms_of_use.html in Sources */,
 				A86D7323CE1A9450906A91DD /* fft.cpp in Sources */,
 				C098DBE008A1B5C6D12ABFFD /* ofxBeat.cpp in Sources */,
+				08C23182D394C53F6ECE6CCC /* easing_terms_of_use.html in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -295,8 +295,8 @@
 				HEADER_SEARCH_PATHS = (
 					"$(OF_CORE_HEADERS)",
 					src,
-					../../../addons/ofxEasing/src,
 					../../../addons/ofxBeat/src,
+					../../../addons/ofxEasing/src,
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				ONLY_ACTIVE_ARCH = YES;
@@ -331,8 +331,8 @@
 				HEADER_SEARCH_PATHS = (
 					"$(OF_CORE_HEADERS)",
 					src,
-					../../../addons/ofxEasing/src,
 					../../../addons/ofxBeat/src,
+					../../../addons/ofxEasing/src,
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				OTHER_CPLUSPLUSFLAGS = (
@@ -360,8 +360,8 @@
 				HEADER_SEARCH_PATHS = (
 					"$(OF_CORE_HEADERS)",
 					src,
-					../../../addons/ofxEasing/src,
 					../../../addons/ofxBeat/src,
+					../../../addons/ofxEasing/src,
 				);
 				ICON = "$(ICON_NAME_DEBUG)";
 				ICON_FILE = "$(ICON_FILE_PATH)$(ICON)";
@@ -389,8 +389,8 @@
 				HEADER_SEARCH_PATHS = (
 					"$(OF_CORE_HEADERS)",
 					src,
-					../../../addons/ofxEasing/src,
 					../../../addons/ofxBeat/src,
+					../../../addons/ofxEasing/src,
 				);
 				ICON = "$(ICON_NAME_RELEASE)";
 				ICON_FILE = "$(ICON_FILE_PATH)$(ICON)";

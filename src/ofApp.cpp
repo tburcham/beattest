@@ -11,32 +11,23 @@ void ofApp::setup(){
     ofEnableSmoothing();
     
     
+    ofSetLogLevel(OF_LOG_VERBOSE);
+    ofSetVerticalSync(false);
+    ofEnableAlphaBlending();
     
-    shaderBlurX.load("shadersGL3/shaderBlurX");
-    shaderBlurY.load("shadersGL3/shaderBlurY");
+    shader.setGeometryInputType(GL_LINES);
+    shader.setGeometryOutputType(GL_TRIANGLE_STRIP);
+    shader.setGeometryOutputCount(4);
+    shader.load("shaders/vert.glsl", "shaders/frag.glsl", "shaders/geom.glsl");
     
-    fboBlurOnePass.allocate(ofGetWidth(), ofGetHeight());
-    fboBlurTwoPass.allocate(ofGetWidth(), ofGetHeight());
+    ofLog() << "Maximum number of output vertices support is: " << shader.getGeometryMaxOutputCount();
     
-    //plane.set(1600, 1200, 80, 60);
-    //plane.mapTexCoordsFromTexture(img.getTextureReference());
     
     initTime = 0;
     endRadius = 0;
     endRotation = 0;
     radius = 100;
     
-    /*sphere.setResolution(25);
-    sphere2.setResolution(25);
-    sphere3.setResolution(25);
-    sphere4.setResolution(25);
-    sphere5.setResolution(25);*/
-    
-    /*sphere.move(ofRandom(-200, 200), ofRandom(-200, 200), ofRandom(-200, 200));
-    sphere2.move(ofRandom(-200, 200), ofRandom(-200, 200), ofRandom(-200, 200));
-    sphere3.move(ofRandom(-200, 200), ofRandom(-200, 200), ofRandom(-200, 200));
-    sphere4.move(ofRandom(-200, 200), ofRandom(-200, 200), ofRandom(-200, 200));
-    sphere5.move(ofRandom(-200, 200), ofRandom(-200, 200), ofRandom(-200, 200));*/
     
     
     for( int i=0; i < 25; i++ ) {
@@ -45,7 +36,7 @@ void ofApp::setup(){
     }
                          
     
-    glMatrixMode(GL_PROJECTION);
+    //glMatrixMode(GL_PROJECTION);
     cam.setFov(60);
     cam.setNearClip(1);
     cam.setFarClip(20000);
@@ -64,22 +55,14 @@ void ofApp::setup(){
     colors[3] = ofColor::indianRed;
     colors[4] = ofColor::orangeRed;
     
-    point.setDiffuseColor(ofColor(0.0, 255.0, 0.0));
-    point.setPointLight();
     
-    spot.setDiffuseColor(ofFloatColor(255.0, 0.0, 0.0f));
-    spot.setSpecularColor(ofColor(0, 0, 255));
-    spot.setSpotlight();
-    spot.setSpotConcentration(5);
-    spot.setSpotlightCutOff(10);
-    spot_rot = ofVec3f(0, 0, 0);
-    setLightOri(spot, spot_rot);
-    
-    spot.setPosition(0, 0, 300);
     
     bOrbit = bRoll = false;
     angleH = roll = 0.0f;
     distance = 500.f;
+    
+    doShader = false;
+    ofEnableDepthTest();
 }
 
 //--------------------------------------------------------------
@@ -98,7 +81,7 @@ void ofApp::update(){
     
     
     ofBackground(0,0,0);
-    ofSetColor(0,0,255,50);
+    ofSetColor(122,0,255,50);
     
     cout << snare;
     cout << "\n";
@@ -143,6 +126,9 @@ void ofApp::update(){
 //--------------------------------------------------------------
 void ofApp::draw(){
     
+    ofPushMatrix();
+    
+    
     
     //ofSetColor(0, 0, 0);  // Set the drawing color to white
     
@@ -164,124 +150,58 @@ void ofApp::draw(){
     float ty = ofGetHeight() / 2;
     ofTranslate(tx, ty);
     
-    
 
     
-    /*float percentY = mouseY / (float)ofGetHeight();
-    float rotation = ofMap(percentY, 0, 1, -60, 60, true) + 60;
-    float percentX = mouseX / (float)ofGetWidth();
-    float rotationX = ofMap(percentX, 0, 1, -60, 60, true) + 60;*/
-    //ofRotate(30, 2, 1, 0.5);
     
-    //plane.drawWireframe();
+    //shaderBlurX.begin();
     
-    
-    
-    shaderBlurX.begin();
+    if(doShader) {
+        shader.begin();
+        
+        // set thickness of ribbons
+        shader.setUniform1f("thickness", 20);
+        
+        // make light direction slowly rotate
+        shader.setUniform3f("lightDir", sin(ofGetElapsedTimef()/10), cos(ofGetElapsedTimef()/10), 0);
+    }
     
     cam.begin();
     
-    glEnable(GL_LIGHTING);
+    ofColor(255);
+    
+    /*glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT0);
-    glEnable(GL_NORMALIZE);
-    
-    spot.enable();
-
-
-    
-    //ofRotate(rotation, 2, 1, 0.5);
-    
-    //blur = 30 * snare;
-    //shaderBlurX.setUniform1f("blurAmnt", blur);
+    glEnable(GL_NORMALIZE);*/
     
     
-    /*ofFloatColor sphereColor = ofColor::indigo;
-    float sphereColorF[4] = {sphereColor.r, sphereColor.g, sphereColor.b, sphereColor.a};
-    shaderBlurX.setUniform4fv("sphereColor", sphereColorF);*/
-    
-    
-    
-    /*ofBackground(0,0,0);
-    ofSetColor(ofColor::indianRed ,126);*/
-
-    
-    //ofSetColor(255, 0, 0);  // Set the drawing color to white
-    
-    //ofClear(0,0,0);
-    //ofBackground(0,0,0);
-    
-    //ofSetColor(0,0,255);
     
     for( int i=0; i < 25; i++ ) {
         
-        ofSetColor(colors[i % 5]);
+        ofSetColor(colors[i % 5], 50);
         
         spheres[i].setResolution(resolution);
         spheres[i].setRadius(radius * (i + 1) * 0.25);
         
         spheres[i].drawWireframe();
         spheres[i].drawFaces();
+        //spheres[i].draw();
         
     }
     
     
     
     
-    /*sphere.setRadius(radius * 4);
     
-    ofSetColor(colors[0]);
-    
-    sphere.drawWireframe();
-    sphere.drawFaces();
-    
-    //ofClear(0, 255, 0);
-    ofSetColor(colors[1]);
-    
-    sphere2.setRadius(radius * 2.5);
-   
-    sphere2.drawWireframe();
-    sphere2.drawFaces();
-    
-    //ofClear(0, 0, 255);
-    
-    ofSetColor(colors[2]);
-    
-    sphere3.setRadius(radius * 3.5);
-    
-    //ofSetColor(255,255,255);
-    sphere3.drawWireframe();
-    //ofSetColor(0,0,255,126);
-    sphere3.drawFaces();
-    //sphere3.drawVertices();
-    
-    
-    ofSetColor(colors[3]);
-    
-    sphere4.setRadius(radius * 3);
-    
-    sphere4.drawWireframe();
-    //sphere2.drawFaces();
-    
-    ofSetColor(colors[4]);
-    
-    sphere5.setRadius(radius * 2.5);
-    
-    sphere5.drawWireframe();*/
-    //sphere5.drawAxes(500);
-    //sphere5.drawNormals(250);
-    //sphere2.drawFaces();
-    spot.disable();
-
-    //ofPopMatrix();
     
     cam.end();
 
     
-    shaderBlurX.end();
+    //shaderBlurX.end();
     
+    if(doShader) shader.end();
     
-    
-    
+    ofPopMatrix();
+
     
     
 }
@@ -348,12 +268,12 @@ void ofApp::keyPressed(int key){
         bRoll = !bRoll;
     }
     else if (key == OF_KEY_UP) {
-        distance = MIN( (distance += 2.5f), 1000);
+        distance = MIN( (distance += 2.5f), 20000);
         cout << distance << endl;
         
     }
     else if (key == OF_KEY_DOWN) {
-        distance = MAX( (distance -= 2.5f), 150);
+        distance = MAX( (distance -= 2.5f), 20000);
         cout << distance << endl;
         
     }

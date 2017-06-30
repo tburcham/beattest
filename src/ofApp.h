@@ -72,5 +72,9 @@ class ofApp : public ofBaseApp{
         bool bOrbit, bRoll;
         float angleH, roll, distance;
     
+        ofShader shader;
+        bool doShader;
+
+    
 
 };
