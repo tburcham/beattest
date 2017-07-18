@@ -21,7 +21,7 @@ void main() {
 	vec3 right = normalize(cross(dir, up));	// right vector
 	vec3 norm = cross(right, dir);
 	float fColMult = abs(dot(norm, lightDir));
-	vec4 colMult = vec4(fColMult, fColMult, fColMult, 1.0);
+	vec4 colMult = vec4(fColMult, fColMult, fColMult, 2.0);
 	
 	right *= thickness;
 	

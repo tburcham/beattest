@@ -79,6 +79,8 @@ class ofApp : public ofBaseApp{
     
         ofShader shader;
         bool doShader;
+    
+        bool varyResolution;
 
     
 

@@ -31,7 +31,7 @@ void ofApp::setup(){
     
     
     for( int i=0; i < numSpheres; i++ ) {
-        spheres[i].setResolution(25);
+        //spheres[i].setResolution(25);
         spheres[i].move(ofRandom(-500, 500), ofRandom(-500, 500), ofRandom(-500, 500));
         
         //points.push_back(ofPoint(ofRandomf() * r, ofRandomf() * r, ofRandomf() * r));
@@ -65,20 +65,29 @@ void ofApp::setup(){
     //cam.begin();
     
     
-    colors[0] = ofColor::red;
+    /*colors[0] = ofColor::red;
     colors[1] = ofColor::darkRed;
     colors[2] = ofColor::mediumVioletRed;
     colors[3] = ofColor::indianRed;
-    colors[4] = ofColor::orangeRed;
+    colors[4] = ofColor::orangeRed;*/
+    
+    colors[0] = ofColor::blue;
+    colors[1] = ofColor::darkBlue;
+    colors[2] = ofColor::skyBlue;
+    colors[3] = ofColor::deepSkyBlue;
+    colors[4] = ofColor::dodgerBlue;
     
     
     
     bOrbit = bRoll = false;
     angleH = roll = 0.0f;
-    distance = 500.f;
+    distance = 3000.f;
     
-    doShader = false;
+    doShader = true;
     ofEnableDepthTest();
+    
+    varyResolution = false;
+    resolution = 4;
 }
 
 //--------------------------------------------------------------
@@ -125,18 +134,23 @@ void ofApp::update(){
     rotation = ofxeasing::map_clamp(now, initTime, endTime, kick, endRotation, &ofxeasing::cubic::easeIn);
     //rotation = 30;
     
-    
-    resolution = ofMap(hihat, 0, 1, 1, 8);
+    if (varyResolution) {
+        resolution = ofMap(hihat, 0, 1, 2, 8);
+    } else {
+        // resolution = resolution;
+    }
     
     //setupCamera();
     
-    if (bOrbit) angleH += 1.f;
-    if (bRoll) roll += (snare * 2);
+    if (bOrbit) angleH += 3.f;
+    if (bRoll) roll += (snare * 4);
     
     // here's where the transformation happens, using the orbit and roll member functions of the ofNode class,
     // since angleH and distance are initialised to 0 and 500, we start up as how we want it
     cam.orbit(angleH, 0, distance);
     cam.roll(roll);
+    
+    
 }
 
 //--------------------------------------------------------------
@@ -175,7 +189,7 @@ void ofApp::draw(){
         shader.begin();
         
         // set thickness of ribbons
-        shader.setUniform1f("thickness", 20);
+        shader.setUniform1f("thickness", 40);
         
         // make light direction slowly rotate
         shader.setUniform3f("lightDir", sin(ofGetElapsedTimef()/10), cos(ofGetElapsedTimef()/10), 0);
@@ -189,11 +203,11 @@ void ofApp::draw(){
     glEnable(GL_LIGHT0);
     glEnable(GL_NORMALIZE);*/
     
-    
+    points.clear();
     
     for( int i=0; i < numSpheres; i++ ) {
         
-        ofSetColor(colors[i % 5], ofClamp(kick * 100, 100, 100));
+        ofSetColor(colors[i % 5], ofClamp(kick * 100, 50, 100));
         
         spheres[i].setResolution(resolution);
         spheres[i].setRadius(radius * (i + 1) * 0.25);
@@ -201,6 +215,22 @@ void ofApp::draw(){
         spheres[i].drawWireframe();
         spheres[i].drawFaces();
         //spheres[i].draw();
+        
+        //ofDrawSphere(ofRandom(-500, 500), ofRandom(-500, 500), ofRandom(-500, 500), radius * (i + 1) * 0.25);
+        
+        //for( int i=0; i < numSpheres; i++ ) {
+            /*spheres[i].setResolution(25);
+             spheres[i].move(ofRandom(-500, 500), ofRandom(-500, 500), ofRandom(-500, 500));*/
+            
+            //points.push_back(ofPoint(ofRandomf() * r, ofRandomf() * r, ofRandomf() * r));
+            
+            tempMesh = spheres[i].getMesh();
+            tempVerts = tempMesh.getVertices();
+            
+            for ( int j=0; j < tempMesh.getNumVertices(); j++) {
+                points.push_back(ofPoint(tempVerts[j].x + spheres[i].getX(), tempVerts[j].y + spheres[i].getY(), tempVerts[j].z + spheres[i].getZ()));
+            }
+        //}
         
     }
     
@@ -296,6 +326,40 @@ void ofApp::keyPressed(int key){
         distance = MAX( (distance -= 2.5f), 20000);
         cout << distance << endl;
         
+    }
+    if( key == 's' ){
+        doShader = !doShader;
+    }
+    if (key == 'v'){
+        varyResolution = !varyResolution;
+    }
+    
+    if (key == '2') {
+        resolution = 2;
+    }
+    if (key == '3') {
+        resolution = 3;
+    }
+    if (key == '4') {
+        resolution = 4;
+    }
+    if (key == '5') {
+        resolution = 5;
+    }
+    if (key == '6') {
+        resolution = 6;
+    }
+    if (key == '7') {
+        resolution = 7;
+    }
+    if (key == '8') {
+        resolution = 8;
+    }
+    if (key == '9') {
+        resolution = 9;
+    }
+    if (key == '0') {
+        resolution = 10;
     }
 }
 
