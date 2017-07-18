@@ -36,6 +36,11 @@ class ofApp : public ofBaseApp{
         ofSpherePrimitive sphere5;*/
     
         ofSpherePrimitive spheres[25];
+        int numSpheres = 25;
+    
+        vector<ofPoint> points;
+        ofMesh tempMesh;
+        vector<ofVec3f> tempVerts;
     
         ofEasyCam cam;
     

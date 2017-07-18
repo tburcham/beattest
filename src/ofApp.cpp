@@ -30,9 +30,25 @@ void ofApp::setup(){
     
     
     
-    for( int i=0; i < 25; i++ ) {
+    for( int i=0; i < numSpheres; i++ ) {
         spheres[i].setResolution(25);
         spheres[i].move(ofRandom(-500, 500), ofRandom(-500, 500), ofRandom(-500, 500));
+        
+        //points.push_back(ofPoint(ofRandomf() * r, ofRandomf() * r, ofRandomf() * r));
+
+        /*tempMesh = spheres[i].getMesh();
+        tempVerts = tempMesh.getVertices();*/
+        
+        /*for ( int j=0; j < tempMesh.getNumVertices(); j++) {
+            points.push_back(ofPoint(tempVerts[j].x, tempVerts[j].y, tempVerts[j].z));
+        }*/
+        
+        // create a bunch of random points
+        float r = ofGetHeight()/2;
+        for(int i=0; i<100; i++) {
+            points.push_back(ofPoint(ofRandomf() * r, ofRandomf() * r, ofRandomf() * r));
+        }
+        
     }
                          
     
@@ -110,7 +126,7 @@ void ofApp::update(){
     //rotation = 30;
     
     
-    resolution = ofMap(hihat, 0, 1, 10, 50);
+    resolution = ofMap(hihat, 0, 1, 1, 8);
     
     //setupCamera();
     
@@ -151,7 +167,7 @@ void ofApp::draw(){
     ofTranslate(tx, ty);
     
 
-    
+    cam.begin();
     
     //shaderBlurX.begin();
     
@@ -165,7 +181,7 @@ void ofApp::draw(){
         shader.setUniform3f("lightDir", sin(ofGetElapsedTimef()/10), cos(ofGetElapsedTimef()/10), 0);
     }
     
-    cam.begin();
+    
     
     ofColor(255);
     
@@ -175,9 +191,9 @@ void ofApp::draw(){
     
     
     
-    for( int i=0; i < 25; i++ ) {
+    for( int i=0; i < numSpheres; i++ ) {
         
-        ofSetColor(colors[i % 5], 50);
+        ofSetColor(colors[i % 5], ofClamp(kick * 100, 100, 100));
         
         spheres[i].setResolution(resolution);
         spheres[i].setRadius(radius * (i + 1) * 0.25);
@@ -189,16 +205,20 @@ void ofApp::draw(){
     }
     
     
+    for(unsigned int i=1; i<points.size(); i++) {
+        ofDrawLine(points[i-1], points[i]);
+    }
     
     
     
     
-    cam.end();
 
     
     //shaderBlurX.end();
     
     if(doShader) shader.end();
+    
+    cam.end();
     
     ofPopMatrix();
 
