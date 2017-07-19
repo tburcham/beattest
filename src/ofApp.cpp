@@ -7,7 +7,7 @@ void ofApp::setup(){
     
     //ofClear(0,0,0);
     
-    ofEnableAntiAliasing();
+    //ofEnableAntiAliasing();
     ofEnableSmoothing();
     
     
@@ -27,7 +27,7 @@ void ofApp::setup(){
     endRadius = 0;
     endRotation = 0;
     radius = 100;
-    
+    jitter = 50;
     
     
     for( int i=0; i < numSpheres; i++ ) {
@@ -44,10 +44,10 @@ void ofApp::setup(){
         }*/
         
         // create a bunch of random points
-        float r = ofGetHeight()/2;
+        /*float r = ofGetHeight()/2;
         for(int i=0; i<100; i++) {
             points.push_back(ofPoint(ofRandomf() * r, ofRandomf() * r, ofRandomf() * r));
-        }
+        }*/
         
     }
                          
@@ -71,17 +71,17 @@ void ofApp::setup(){
     colors[3] = ofColor::indianRed;
     colors[4] = ofColor::orangeRed;*/
     
-    colors[0] = ofColor::blue;
+    colors[0] = ofColor::lightBlue;
     colors[1] = ofColor::darkBlue;
     colors[2] = ofColor::skyBlue;
     colors[3] = ofColor::deepSkyBlue;
-    colors[4] = ofColor::dodgerBlue;
+    colors[4] = ofColor::blueSteel;
     
     
     
     bOrbit = bRoll = false;
     angleH = roll = 0.0f;
-    distance = 3000.f;
+    distance = 2000.f;
     
     doShader = true;
     ofEnableDepthTest();
@@ -150,6 +150,37 @@ void ofApp::update(){
     cam.orbit(angleH, 0, distance);
     cam.roll(roll);
     
+    for( int i=0; i < numSpheres; i++ ) {
+        
+        ofSetColor(colors[i % 5], ofClamp(kick * 100, 50, 100));
+        
+        spheres[i].setResolution(resolution);
+        spheres[i].setRadius(radius * (i + 1) * 0.25);
+
+            //spheres[i].get
+        
+        /*tempMesh = spheres[i].getMeshPtr();
+        tempVerts = tempMesh.getVerticesPointer();
+        
+        for ( int j=0; j < tempMesh.getNumVertices(); j++) {
+            tempVerts[j] += ofPoint(ofRandom(-jitter, jitter), ofRandom(-jitter, jitter), ofRandom(-jitter, jitter));
+        }*/
+        
+        vector<ofMeshFace> triangles = spheres[i].getMesh().getUniqueFaces();
+        
+        /*for ( int j=0; j < triangles.size()   ; j++ ) {
+            //triangles[j] += ofPoint(ofRandom(-jitter, jitter), ofRandom(-jitter, jitter), ofRandom(-jitter, jitter));
+            triangles[j].setVertex(triangles[j]. += ofPoint(
+                                                                       ofRandom(-jitter, jitter),
+                                                                       ofRandom(-jitter, jitter),
+                                                                       ofRandom(-jitter, jitter)
+                                                                       ));
+        }*/
+        
+        
+        
+    }
+    
     
 }
 
@@ -209,8 +240,8 @@ void ofApp::draw(){
         
         ofSetColor(colors[i % 5], ofClamp(kick * 100, 50, 100));
         
-        spheres[i].setResolution(resolution);
-        spheres[i].setRadius(radius * (i + 1) * 0.25);
+        //spheres[i].setResolution(resolution);
+        //spheres[i].setRadius(radius * (i + 1) * 0.25);
         
         spheres[i].drawWireframe();
         spheres[i].drawFaces();
@@ -224,8 +255,18 @@ void ofApp::draw(){
             
             //points.push_back(ofPoint(ofRandomf() * r, ofRandomf() * r, ofRandomf() * r));
             
-            tempMesh = spheres[i].getMesh();
-            tempVerts = tempMesh.getVertices();
+        
+        
+        /*spheres[i].drawWireframe();
+        spheres[i].drawFaces();*/
+        
+        tempMesh = spheres[i].getMesh();
+        tempVerts = tempMesh.getVertices();
+        
+        for ( int j=0; j < tempMesh.getNumVertices(); j++) {
+            tempVerts[j] += ofPoint(ofRandom(-jitter, jitter), ofRandom(-jitter, jitter), ofRandom(-jitter, jitter));
+        }
+        
             
             for ( int j=0; j < tempMesh.getNumVertices(); j++) {
                 points.push_back(ofPoint(tempVerts[j].x + spheres[i].getX(), tempVerts[j].y + spheres[i].getY(), tempVerts[j].z + spheres[i].getZ()));
@@ -236,6 +277,7 @@ void ofApp::draw(){
     
     
     for(unsigned int i=1; i<points.size(); i++) {
+        ofSetColor(colors[(i / 20) % 5], ofClamp(kick * 100, 50, 100));
         ofDrawLine(points[i-1], points[i]);
     }
     

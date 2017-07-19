@@ -81,6 +81,8 @@ class ofApp : public ofBaseApp{
         bool doShader;
     
         bool varyResolution;
+    
+        float jitter;
 
     
 
