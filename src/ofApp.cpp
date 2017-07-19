@@ -15,7 +15,7 @@ void ofApp::setup(){
     ofSetVerticalSync(false);
     ofEnableAlphaBlending();
     
-    shader.setGeometryInputType(GL_LINES);
+    shader.setGeometryInputType(GL_TRIANGLE_STRIP);
     shader.setGeometryOutputType(GL_TRIANGLE_STRIP);
     shader.setGeometryOutputCount(4);
     shader.load("shaders/vert.glsl", "shaders/frag.glsl", "shaders/geom.glsl");
@@ -27,7 +27,7 @@ void ofApp::setup(){
     endRadius = 0;
     endRotation = 0;
     radius = 100;
-    jitter = 50;
+    jitter = 100;
     
     
     for( int i=0; i < numSpheres; i++ ) {
@@ -71,11 +71,17 @@ void ofApp::setup(){
     colors[3] = ofColor::indianRed;
     colors[4] = ofColor::orangeRed;*/
     
-    colors[0] = ofColor::lightBlue;
+    /*colors[0] = ofColor::lightBlue;
     colors[1] = ofColor::darkBlue;
     colors[2] = ofColor::skyBlue;
     colors[3] = ofColor::deepSkyBlue;
-    colors[4] = ofColor::blueSteel;
+    colors[4] = ofColor::blueSteel;*/
+    
+    colors[0] = ofColor::white;
+    colors[1] = ofColor::white;
+    colors[2] = ofColor::white;
+    colors[3] = ofColor::white;
+    colors[4] = ofColor::white;
     
     
     
@@ -220,10 +226,10 @@ void ofApp::draw(){
         shader.begin();
         
         // set thickness of ribbons
-        shader.setUniform1f("thickness", 40);
+        shader.setUniform1f("thickness", 50 * snare);
         
         // make light direction slowly rotate
-        shader.setUniform3f("lightDir", sin(ofGetElapsedTimef()/10), cos(ofGetElapsedTimef()/10), 0);
+        shader.setUniform3f("lightDir", sin(ofGetElapsedTimef()/20), cos(ofGetElapsedTimef()/20), 0);
     }
     
     
