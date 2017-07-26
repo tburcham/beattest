@@ -2,6 +2,7 @@
 
 #include "ofMain.h"
 #include "ofxBeat.h"
+#include "ofxGui.h"
 
 class ofApp : public ofBaseApp{
 
@@ -83,6 +84,31 @@ class ofApp : public ofBaseApp{
         bool varyResolution;
     
         float jitter;
+    
+        /* Ofxgui control panel */
+    
+        bool bHide;
+    
+        void circleResolutionChanged(int & circleResolution);
+    
+        //ofxFloatSlider radius;
+    //ofxColorSlider color;
+    //ofxVec2Slider center;
+    ofxIntSlider circleResolution;
+    ofxIntSlider thickness;
+    ofxFloatSlider orbitInc;
+    ofxFloatSlider rollInc;
+    
+    /*ofxToggle filled;
+    ofxButton twoCircles;
+    ofxButton ringButton;
+    ofxLabel screenSize;*/
+    
+    ofxPanel gui;
+    
+    void				drawGui();
+    void                drawSpheres();
+
 
     
 

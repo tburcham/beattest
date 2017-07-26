@@ -1,2 +1,3 @@
 ofxBeat
 ofxEasing
+ofxGui

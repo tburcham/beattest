@@ -12,8 +12,9 @@ void ofApp::setup(){
     
     
     ofSetLogLevel(OF_LOG_VERBOSE);
-    ofSetVerticalSync(false);
+    ofSetVerticalSync(true);
     ofEnableAlphaBlending();
+    ofEnableDepthTest();
     
     shader.setGeometryInputType(GL_TRIANGLE_STRIP);
     shader.setGeometryOutputType(GL_TRIANGLE_STRIP);
@@ -23,11 +24,26 @@ void ofApp::setup(){
     ofLog() << "Maximum number of output vertices support is: " << shader.getGeometryMaxOutputCount();
     
     
+    /* Control Panel */
+    
+    // we add this listener before setting up so the initial circle resolution is correct
+    circleResolution.addListener(this, &ofApp::circleResolutionChanged);
+    
+    
+    gui.setup(); // most of the time you don't need a name
+    gui.add(circleResolution.setup("resolution", 5, 2, 50));
+    gui.add(thickness.setup("thickness", 20, 1, 300));
+    gui.add(orbitInc.setup("orbit inc", 0.25, -10, 10));
+    gui.add(rollInc.setup("roll inc", 2, -10, 10));
+    
+    bHide = false;
+    
+    
     initTime = 0;
     endRadius = 0;
     endRotation = 0;
     radius = 100;
-    jitter = 100;
+    jitter = 20;
     
     
     for( int i=0; i < numSpheres; i++ ) {
@@ -78,10 +94,10 @@ void ofApp::setup(){
     colors[4] = ofColor::blueSteel;*/
     
     colors[0] = ofColor::white;
-    colors[1] = ofColor::white;
-    colors[2] = ofColor::white;
-    colors[3] = ofColor::white;
-    colors[4] = ofColor::white;
+    colors[1] = ofColor::indianRed;
+    colors[2] = ofColor::darkorange;
+    colors[3] = ofColor::orangeRed;
+    colors[4] = ofColor::yellow;
     
     
     
@@ -90,14 +106,22 @@ void ofApp::setup(){
     distance = 2000.f;
     
     doShader = true;
-    ofEnableDepthTest();
+    
     
     varyResolution = false;
     resolution = 4;
 }
 
 //--------------------------------------------------------------
+void ofApp::circleResolutionChanged(int &circleResolution){
+    ofSetCircleResolution(circleResolution);
+}
+
+//--------------------------------------------------------------
 void ofApp::update(){
+    
+    
+    
     beat.update(ofGetElapsedTimeMillis());
     
     auto duration = 5.f;
@@ -141,15 +165,15 @@ void ofApp::update(){
     //rotation = 30;
     
     if (varyResolution) {
-        resolution = ofMap(hihat, 0, 1, 2, 8);
+        resolution = ofMap(hihat, 0, 1, 3, 20);
     } else {
         // resolution = resolution;
     }
     
     //setupCamera();
     
-    if (bOrbit) angleH += 3.f;
-    if (bRoll) roll += (snare * 4);
+    if (bOrbit) angleH += orbitInc;
+    if (bRoll) roll += (snare * rollInc);
     
     // here's where the transformation happens, using the orbit and roll member functions of the ofNode class,
     // since angleH and distance are initialised to 0 and 500, we start up as how we want it
@@ -160,7 +184,7 @@ void ofApp::update(){
         
         ofSetColor(colors[i % 5], ofClamp(kick * 100, 50, 100));
         
-        spheres[i].setResolution(resolution);
+        spheres[i].setResolution(circleResolution);
         spheres[i].setRadius(radius * (i + 1) * 0.25);
 
             //spheres[i].get
@@ -193,7 +217,28 @@ void ofApp::update(){
 //--------------------------------------------------------------
 void ofApp::draw(){
     
+    // auto draw?
+    // should the gui control hiding?
+    /*if(!bHide){
+        ofLog() << "GUI! on";
+        
+        gui.draw();
+        
+        ofLog() << "GUI! ";
+    }*/
+    
+    drawGui();
+    drawSpheres();
+    
+    
+}
+
+void ofApp::drawSpheres() {
+    
+    
     ofPushMatrix();
+    
+
     
     
     
@@ -226,7 +271,7 @@ void ofApp::draw(){
         shader.begin();
         
         // set thickness of ribbons
-        shader.setUniform1f("thickness", 50 * snare);
+        shader.setUniform1f("thickness", thickness);
         
         // make light direction slowly rotate
         shader.setUniform3f("lightDir", sin(ofGetElapsedTimef()/20), cos(ofGetElapsedTimef()/20), 0);
@@ -282,10 +327,10 @@ void ofApp::draw(){
     }
     
     
-    for(unsigned int i=1; i<points.size(); i++) {
+    /*for(unsigned int i=1; i<points.size(); i++) {
         ofSetColor(colors[(i / 20) % 5], ofClamp(kick * 100, 50, 100));
         ofDrawLine(points[i-1], points[i]);
-    }
+    }*/
     
     
     
@@ -296,13 +341,53 @@ void ofApp::draw(){
     
     if(doShader) shader.end();
     
+
+    
     cam.end();
     
+
+    
     ofPopMatrix();
+    
+    
 
     
     
 }
+
+void ofApp::drawGui() {
+    
+    /*guiFPS = (int)(ofGetFrameRate() + 0.5);
+    
+    // calculate minimum fps
+    deltaTimeDeque.push_back(deltaTime);
+    
+    while (deltaTimeDeque.size() > guiFPS.get())
+        deltaTimeDeque.pop_front();
+    
+    float longestTime = 0;
+    for (int i=0; i<deltaTimeDeque.size(); i++){
+        if (deltaTimeDeque[i] > longestTime)
+            longestTime = deltaTimeDeque[i];
+    }
+    
+    guiMinFPS.set(1.0 / longestTime);*/
+    
+    
+    //ofPushStyle();
+    //ofBackgroundGradient(ofColor::white, ofColor::gray);
+    
+    //ofEnableBlendMode(OF_BLENDMODE_ALPHA);
+    //ofNoFill();
+    //ofSetColor(ofColor::white);
+    if (!bHide) {
+        gui.draw();
+    }
+    
+    //ofPopStyle();
+}
+
+
 
 void ofApp::setLightOri(ofLight &light, ofVec3f rot)
 {
@@ -359,7 +444,7 @@ void ofApp::setupCamera() {
 //--------------------------------------------------------------
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
-    if (key == 'h') {
+    if (key == 't') {
         bOrbit = !bOrbit;
     }
     else if (key == 'r') {
@@ -375,7 +460,16 @@ void ofApp::keyPressed(int key){
         cout << distance << endl;
         
     }
-    if( key == 's' ){
+    if(key == 'h'){
+        bHide = !bHide;
+    }
+    else if(key == 's'){
+        gui.saveToFile("settings.xml");
+    }
+    if(key == 'l'){
+        gui.loadFromFile("settings.xml");
+    }
+    if( key == 'd' ){
         doShader = !doShader;
     }
     if (key == 'v'){
@@ -401,13 +495,13 @@ void ofApp::keyPressed(int key){
         resolution = 7;
     }
     if (key == '8') {
-        resolution = 8;
+        resolution = 15;
     }
     if (key == '9') {
-        resolution = 9;
+        resolution = 30;
     }
     if (key == '0') {
-        resolution = 10;
+        resolution = 45;
     }
 }
 
