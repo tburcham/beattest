@@ -1,6 +1,8 @@
 <group>
 	<circle_res>5</circle_res>
 <group/>
-<resolution>6</resolution>
-	<thickness>24</thickness>
+<resolution>3</resolution>
+	<thickness>300</thickness>
+<orbit_inc>-0.400001</orbit_inc>
+	<roll_inc>-0.1</roll_inc>
 </group>

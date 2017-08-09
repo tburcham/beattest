@@ -15,11 +15,13 @@ void ofApp::setup(){
     ofSetVerticalSync(true);
     ofEnableAlphaBlending();
     ofEnableDepthTest();
+    //ofDisableDepthTest();
     
     shader.setGeometryInputType(GL_TRIANGLE_STRIP);
     shader.setGeometryOutputType(GL_TRIANGLE_STRIP);
     shader.setGeometryOutputCount(4);
     shader.load("shaders/vert.glsl", "shaders/frag.glsl", "shaders/geom.glsl");
+    
     
     ofLog() << "Maximum number of output vertices support is: " << shader.getGeometryMaxOutputCount();
     
@@ -28,6 +30,11 @@ void ofApp::setup(){
     
     // we add this listener before setting up so the initial circle resolution is correct
     circleResolution.addListener(this, &ofApp::circleResolutionChanged);
+    
+    
+    texturePatternImg.load("yellowstripes.png");
+    
+    shader.setUniformTexture("texture0", texturePatternImg.getTexture(), 1);
     
     
     gui.setup(); // most of the time you don't need a name
@@ -49,6 +56,8 @@ void ofApp::setup(){
     for( int i=0; i < numSpheres; i++ ) {
         //spheres[i].setResolution(25);
         spheres[i].move(ofRandom(-500, 500), ofRandom(-500, 500), ofRandom(-500, 500));
+        
+        spheres[i].mapTexCoords(0, 0, texturePatternImg.getWidth(), texturePatternImg.getHeight());
         
         //points.push_back(ofPoint(ofRandomf() * r, ofRandomf() * r, ofRandomf() * r));
 
@@ -93,10 +102,10 @@ void ofApp::setup(){
     colors[3] = ofColor::deepSkyBlue;
     colors[4] = ofColor::blueSteel;*/
     
-    colors[0] = ofColor::white;
-    colors[1] = ofColor::indianRed;
-    colors[2] = ofColor::darkorange;
-    colors[3] = ofColor::orangeRed;
+    colors[0] = ofColor::lightGreen;
+    colors[1] = ofColor::green;
+    colors[2] = ofColor::darkGreen;
+    colors[3] = ofColor::greenYellow;
     colors[4] = ofColor::yellow;
     
     
@@ -124,7 +133,7 @@ void ofApp::update(){
     
     beat.update(ofGetElapsedTimeMillis());
     
-    auto duration = 5.f;
+    auto duration = 200.f;
     auto endTime = initTime + duration;
     auto now = ofGetElapsedTimef();
     
@@ -144,7 +153,7 @@ void ofApp::update(){
         initTime = ofGetElapsedTimef();
         cout << "reset";
     }
-    radius = ofxeasing::map_clamp(now, initTime, endTime, radius, endRadius, &ofxeasing::quad::easeOut);
+    radius = ofxeasing::map_clamp(now, initTime, endTime, radius, endRadius, &ofxeasing::cubic::easeOut);
     cout << endRadius;
     cout << " ";
     cout << radius;
@@ -236,9 +245,11 @@ void ofApp::draw(){
 void ofApp::drawSpheres() {
     
     
+    
+    
     ofPushMatrix();
     
-
+    //texturePatternImg.getTexture().bind();
     
     
     
@@ -294,9 +305,9 @@ void ofApp::drawSpheres() {
         //spheres[i].setResolution(resolution);
         //spheres[i].setRadius(radius * (i + 1) * 0.25);
         
-        spheres[i].drawWireframe();
-        spheres[i].drawFaces();
-        //spheres[i].draw();
+        //spheres[i].drawWireframe();
+        //spheres[i].drawFaces();
+        spheres[i].draw();
         
         //ofDrawSphere(ofRandom(-500, 500), ofRandom(-500, 500), ofRandom(-500, 500), radius * (i + 1) * 0.25);
         
@@ -345,12 +356,12 @@ void ofApp::drawSpheres() {
     
     cam.end();
     
-
+    //texturePatternImg.getTexture().bind();
     
     ofPopMatrix();
     
     
-
+    
     
     
 }

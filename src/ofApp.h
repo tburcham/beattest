@@ -36,8 +36,8 @@ class ofApp : public ofBaseApp{
         ofSpherePrimitive sphere4;
         ofSpherePrimitive sphere5;*/
     
-        ofSpherePrimitive spheres[25];
-        int numSpheres = 25;
+        ofSpherePrimitive spheres[100];
+        int numSpheres = 100;
     
         vector<ofPoint> points;
         ofMesh tempMesh;
@@ -92,24 +92,24 @@ class ofApp : public ofBaseApp{
         void circleResolutionChanged(int & circleResolution);
     
         //ofxFloatSlider radius;
-    //ofxColorSlider color;
-    //ofxVec2Slider center;
-    ofxIntSlider circleResolution;
-    ofxIntSlider thickness;
-    ofxFloatSlider orbitInc;
-    ofxFloatSlider rollInc;
+        //ofxColorSlider color;
+        //ofxVec2Slider center;
+        ofxIntSlider circleResolution;
+        ofxIntSlider thickness;
+        ofxFloatSlider orbitInc;
+        ofxFloatSlider rollInc;
     
-    /*ofxToggle filled;
-    ofxButton twoCircles;
-    ofxButton ringButton;
-    ofxLabel screenSize;*/
+        /*ofxToggle filled;
+         ofxButton twoCircles;
+         ofxButton ringButton;
+         ofxLabel screenSize;*/
     
-    ofxPanel gui;
+        ofxPanel gui;
     
-    void				drawGui();
-    void                drawSpheres();
+        void				drawGui();
+        void                drawSpheres();
 
-
+        ofImage texturePatternImg;
     
 
 };
