@@ -110,6 +110,10 @@ class ofApp : public ofBaseApp{
         void                drawSpheres();
 
         ofImage texturePatternImg;
+        ofVideoPlayer 		movie;
+        ofVideoGrabber 		vidGrabber;
+    
+        ofFbo       fbo;
     
 
 };

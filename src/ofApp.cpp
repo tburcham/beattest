@@ -3,6 +3,9 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
+    
+    ofLog() << "GL Version" << glGetString( GL_VERSION );
+    
     ofSoundStreamSetup(0, 1, this, 44100, beat.getBufferSize(), 4);
     
     //ofClear(0,0,0);
@@ -14,12 +17,12 @@ void ofApp::setup(){
     ofSetLogLevel(OF_LOG_VERBOSE);
     ofSetVerticalSync(true);
     ofEnableAlphaBlending();
-    ofEnableDepthTest();
-    //ofDisableDepthTest();
+    //ofEnableDepthTest();
+    ofDisableDepthTest();
     
-    shader.setGeometryInputType(GL_TRIANGLE_STRIP);
+    /*shader.setGeometryInputType(GL_TRIANGLE_STRIP);
     shader.setGeometryOutputType(GL_TRIANGLE_STRIP);
-    shader.setGeometryOutputCount(4);
+    shader.setGeometryOutputCount(4);*/
     shader.load("shaders/vert.glsl", "shaders/frag.glsl", "shaders/geom.glsl");
     
     
@@ -34,7 +37,15 @@ void ofApp::setup(){
     
     texturePatternImg.load("yellowstripes.png");
     
-    shader.setUniformTexture("texture0", texturePatternImg.getTexture(), 1);
+    fbo.allocate(ofGetWidth(),ofGetHeight());
+    
+    // Let's clear the FBOs
+    // otherwise it will bring some junk with it from the memory
+    fbo.begin();
+    ofClear(0,0,0,255);
+    fbo.end();
+    
+    //shader.setUniformTexture("texture0", texturePatternImg.getTexture(), 1);
     
     
     gui.setup(); // most of the time you don't need a name
@@ -238,7 +249,17 @@ void ofApp::draw(){
     }*/
     
     drawGui();
-    drawSpheres();
+    
+    fbo.begin();
+    ofClear(0, 0, 0,255);
+    
+        drawSpheres();
+    
+    fbo.end();
+    fbo.draw(0, 0);
+    
+    
+
     
     
 }
@@ -248,7 +269,7 @@ void ofApp::drawSpheres() {
     
     
     
-    ofPushMatrix();
+    //ofPushMatrix();
     
     //texturePatternImg.getTexture().bind();
     
@@ -287,6 +308,11 @@ void ofApp::drawSpheres() {
         
         // make light direction slowly rotate
         shader.setUniform3f("lightDir", sin(ofGetElapsedTimef()/20), cos(ofGetElapsedTimef()/20), 0);
+        
+        shader.setUniform2f("resolution", ofVec2f(texturePatternImg.getWidth(), texturePatternImg.getHeight()));
+        shader.setUniform2f("mouse", ofVec2f(mouseX, mouseY));
+        shader.setUniform1f("time", ofGetElapsedTimef());
+        shader.setUniformTexture("tex0", texturePatternImg.getTexture(), 1);
     }
     
     
@@ -359,7 +385,7 @@ void ofApp::drawSpheres() {
     
     //texturePatternImg.getTexture().bind();
     
-    ofPopMatrix();
+    //ofPopMatrix();
     
     
     
