@@ -195,6 +195,7 @@ void ofApp::update(){
         
         spheres[i].setResolution(circleResolution);
         spheres[i].setRadius(radius * (i + 1) * 0.25);
+        //spheres[i].setRadius(ofMap(random(), 0, 1, 25, 150));
 
             //spheres[i].get
         

@@ -43,7 +43,7 @@ void main() {
 
     
     float r = random( p0.xy );
-    p0 *= r;
+    //p0 *= r;
     
     float r1 = random( p1.xy );
     p1 *= r1;

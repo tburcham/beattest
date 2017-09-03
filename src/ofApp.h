@@ -36,8 +36,8 @@ class ofApp : public ofBaseApp{
         ofSpherePrimitive sphere4;
         ofSpherePrimitive sphere5;*/
     
-        ofSpherePrimitive spheres[100];
-        int numSpheres = 100;
+        ofSpherePrimitive spheres[30];
+        int numSpheres = 30;
     
         vector<ofPoint> points;
         ofMesh tempMesh;
