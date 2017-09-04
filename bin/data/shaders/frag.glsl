@@ -37,9 +37,9 @@ void main(void)
     vec2 r = pos - center;
     float mr = length(r);
     vec2 posM;
-    float angT = 10.0*time;
+    float angT = time; //10.0*time;
     
-    float expansionT = 5.0;
+    float expansionT = 50000000.0;
     float giroT = 20.0;
     float radioMax = 10000.0;
     
@@ -92,6 +92,10 @@ void main(void)
         } else {
             posM.x += ajusteN;
         }
+    
+        
+        posM.x /= 10;
+        posM.y /= 10;
         
         if (posM.x <= 0.0 || posM.y <= 0.0 || posM.y > resolution.y || posM.x > resolution.x){
             /*if (resolution.x > 0) {
@@ -106,6 +110,7 @@ void main(void)
             discard;
         } else {
             vec4 color = texture(tex0, posM);
+            color.a = 125;
             outputColor = color;
             //gl_FragColor = gl_Color;
         }

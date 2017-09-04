@@ -17,12 +17,17 @@ void ofApp::setup(){
     ofSetLogLevel(OF_LOG_VERBOSE);
     ofSetVerticalSync(true);
     ofEnableAlphaBlending();
-    //ofEnableDepthTest();
-    ofDisableDepthTest();
+    ofEnableDepthTest();
+    //ofDisableDepthTest();
     
-    /*shader.setGeometryInputType(GL_TRIANGLE_STRIP);
-    shader.setGeometryOutputType(GL_TRIANGLE_STRIP);
-    shader.setGeometryOutputCount(4);*/
+    
+    int camWidth 		= 1280;	// try to grab at this size.
+    int camHeight 		= 960;
+    
+    vidGrabber.setVerbose(true);
+    vidGrabber.setup(camWidth,camHeight);
+
+    
     shader.load("shaders/vert.glsl", "shaders/frag.glsl", "shaders/geom.glsl");
     
     
@@ -68,7 +73,8 @@ void ofApp::setup(){
         //spheres[i].setResolution(25);
         spheres[i].move(ofRandom(-500, 500), ofRandom(-500, 500), ofRandom(-500, 500));
         
-        spheres[i].mapTexCoords(0, 0, texturePatternImg.getWidth(), texturePatternImg.getHeight());
+        //spheres[i].mapTexCoords(0, 0, texturePatternImg.getWidth(), texturePatternImg.getHeight());
+        spheres[i].mapTexCoords(0, 0, vidGrabber.getWidth(), vidGrabber.getHeight());
         
         //points.push_back(ofPoint(ofRandomf() * r, ofRandomf() * r, ofRandomf() * r));
 
@@ -137,10 +143,10 @@ void ofApp::circleResolutionChanged(int &circleResolution){
     ofSetCircleResolution(circleResolution);
 }
 
-//--------------------------------------------------------------
+//---------------------------d-----------------------------------
 void ofApp::update(){
     
-    
+    vidGrabber.update();
     
     beat.update(ofGetElapsedTimeMillis());
     
@@ -156,7 +162,7 @@ void ofApp::update(){
     
     
     ofBackground(0,0,0);
-    ofSetColor(122,0,255,50);
+    ofSetColor(255,255,255,255);
     
     cout << snare;
     cout << "\n";
@@ -202,7 +208,8 @@ void ofApp::update(){
     
     for( int i=0; i < numSpheres; i++ ) {
         
-        ofSetColor(colors[i % 5], ofClamp(kick * 100, 50, 100));
+        //ofSetColor(colors[i % 5], ofClamp(kick * 100, 50, 100));
+        ofSetColor(ofColor::white, 255);
         
         spheres[i].setResolution(circleResolution);
         spheres[i].setRadius(radius * (i + 1) * 0.25);
@@ -248,7 +255,7 @@ void ofApp::draw(){
         ofLog() << "GUI! ";
     }*/
     
-    drawGui();
+    
     
     fbo.begin();
     ofClear(0, 0, 0,255);
@@ -258,7 +265,7 @@ void ofApp::draw(){
     fbo.end();
     fbo.draw(0, 0);
     
-    
+    drawGui();
 
     
     
@@ -312,12 +319,13 @@ void ofApp::drawSpheres() {
         shader.setUniform2f("resolution", ofVec2f(texturePatternImg.getWidth(), texturePatternImg.getHeight()));
         shader.setUniform2f("mouse", ofVec2f(mouseX, mouseY));
         shader.setUniform1f("time", ofGetElapsedTimef());
-        shader.setUniformTexture("tex0", texturePatternImg.getTexture(), 1);
+        //shader.setUniformTexture("tex0", texturePatternImg.getTexture(), 1);
+        shader.setUniformTexture("tex0", vidGrabber.getTexture(), 1);
     }
     
     
     
-    ofColor(255);
+    //ofColor(255);
     
     /*glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT0);
@@ -417,7 +425,7 @@ void ofApp::drawGui() {
     
     //ofEnableBlendMode(OF_BLENDMODE_ALPHA);
     //ofNoFill();
-    //ofSetColor(ofColor::white);
+
     if (!bHide) {
         gui.draw();
     }
